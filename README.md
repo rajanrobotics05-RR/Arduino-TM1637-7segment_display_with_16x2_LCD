@@ -138,3 +138,7 @@ UDYAM-TN-27-0023934
 ⭐ If you find this project useful, don't forget to star the repository!
 
 **Happy Learning & Happy Deepavali! 🪔**
+
+## 📷 Connection Diagram
+
+![Rajan Robotics Arduino TM1637 and LCD Connection Diagram](RR_Arduino-TM1637-7segment_display_with_16x2_LCD.png)
