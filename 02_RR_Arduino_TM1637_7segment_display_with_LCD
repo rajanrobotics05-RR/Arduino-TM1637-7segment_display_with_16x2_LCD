@@ -1,0 +1,132 @@
+/*
+ * Created by Balaji for Rajan Robotics
+ * Rajan Robotics
+*/
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <TM1637Display.h>
+
+// TM1637 connections
+#define CLK 3
+#define DIO 2
+
+// LCD I2C address
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// 4-digit display
+TM1637Display display(CLK, DIO);
+
+// Greeting message
+const char message[] =
+  "RAJAN ROBOTICS WISHING HAPPY DEEPAVALI";
+
+// Approximate 7-segment character mapping
+uint8_t getSegment(char c)
+{
+  switch (c)
+  {
+    case '0': return 0x3F;
+    case '1': return 0x06;
+    case '2': return 0x5B;
+    case '3': return 0x4F;
+    case '4': return 0x66;
+    case '5': return 0x6D;
+    case '6': return 0x7D;
+    case '7': return 0x07;
+    case '8': return 0x7F;
+    case '9': return 0x6F;
+
+    case 'A': return 0x77;
+    case 'B': return 0x7C;
+    case 'C': return 0x39;
+    case 'D': return 0x5E;
+    case 'E': return 0x79;
+    case 'F': return 0x71;
+    case 'G': return 0x3D;
+    case 'H': return 0x76;
+    case 'I': return 0x06;
+    case 'J': return 0x1E;
+    case 'L': return 0x38;
+    case 'N': return 0x54;
+    case 'O': return 0x3F;
+    case 'P': return 0x73;
+    case 'R': return 0x50;
+    case 'S': return 0x6D;
+    case 'T': return 0x78;
+    case 'U': return 0x3E;
+    case 'Y': return 0x6E;
+
+    case ' ': return 0x00;
+    default:  return 0x00;
+  }
+}
+
+void setup()
+{
+  lcd.init();
+  lcd.backlight();
+
+  display.setBrightness(7);
+  display.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("RAJAN ROBOTICS");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Get Ready!");
+
+  delay(2000);
+
+  // 10-second countdown
+  for (int i = 10; i >= 0; i--)
+  {
+    display.showNumberDec(i, true);
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Deepavali in:");
+
+    lcd.setCursor(0, 1);
+    lcd.print("     ");
+    lcd.print(i);
+    lcd.print(" Seconds");
+
+    delay(1000);
+  }
+
+  // Countdown completed
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Rajan Robotics");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Happy Deepavali");
+
+  display.clear();
+}
+
+void loop()
+{
+  int len = strlen(message);
+
+  // Scroll greeting on 4-digit display
+  for (int i = 0; i < len + 4; i++)
+  {
+    uint8_t segments[4];
+
+    for (int j = 0; j < 4; j++)
+    {
+      int pos = i + j - 4;
+
+      if (pos >= 0 && pos < len)
+        segments[j] = getSegment(message[pos]);
+      else
+        segments[j] = 0x00;
+    }
+
+    display.setSegments(segments);
+    delay(300);
+  }
+
+  delay(1000);
+}
